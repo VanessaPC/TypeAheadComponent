@@ -152,9 +152,8 @@ const colorsList = [
   "YellowGreen",
 ];
 
-ReactDOM.render(
-  {
-    /* <YourComponentGoesHere /> */
-  },
-  document.getElementById("root")
-);
+const InitialComponent = () => {
+  return <div>Hello</div>;
+};
+
+ReactDOM.render(<InitialComponent />, document.getElementById("root"));
