@@ -7,13 +7,7 @@ import { filterList, stringStartsWithSpace } from "./helpers";
 // ** it should return only those values that start with the characters they entered
 // ** empty space is considered empty (I should remove it)
 // **: clicking on a list item it should populate the input
-// todo: populating the input should re-triger a re render of the list
-
-// ** use props
-// todo: style on bold the matching characters
-// todo: add a background on hover // focus
-// todo: clicking outside the list should close the list
-
+// **: populating the input should re-triger a re render of the list
 // **: input and list should be keyboard navigable
 // **: read keypreses from user
 // **: learn where the key is entering and set it as index
@@ -22,10 +16,19 @@ import { filterList, stringStartsWithSpace } from "./helpers";
 // **: focus away from the input when no list
 // ** : focus back into the input when i reached the top
 
+// ** use props
+// todo: style on bold the matching characters
+// todo: add a background on hover // focus
+// todo: clicking outside the list should close the list
+
 // BUGS:
 // todo: initially when I enter a non-capital letter sometimes the list blinks
 // todo: if I move away from list focusIndex should reset
 // todo: keycode was deprecated and code doesn't work on IE11
+
+// improvements:
+// todo: we should have a clear list button
+// todo: code clean up
 
 const inputIsFilled = (value) => value.length !== 0;
 
@@ -128,6 +131,7 @@ export const TypeAhead = () => {
                 item={item}
                 focused={index === focusIndex}
                 setSelectedItem={setFilterColor}
+                createResultsList={createResultsList}
               />
             ))}
         </ul>

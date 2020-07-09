@@ -1,7 +1,12 @@
 import React, { useRef, useLayoutEffect } from "react";
 import PropTypes from "prop-types";
 
-export const ListItem = ({ item, focused, setSelectedItem }) => {
+export const ListItem = ({
+  item,
+  focused,
+  setSelectedItem,
+  createResultsList,
+}) => {
   // ** I keep a reference to the item here
   // ** so I have access to it to set the focus in the item
   // ** when the user navigates with the keyboard.
@@ -13,11 +18,16 @@ export const ListItem = ({ item, focused, setSelectedItem }) => {
     }
   }, [focused]);
 
-  const handleItemSelect = (e, selectedValue, setChar) => {
+  const handleItemSelect = (e, selectedValue) => {
     if (e.key === "Enter") {
       setSelectedItem(selectedValue);
-      setChar(selectedValue);
     }
+    createResultsList(selectedValue);
+  };
+
+  const handleClick = (item) => {
+    setSelectedItem(item);
+    createResultsList(item);
   };
 
   return (
@@ -27,7 +37,7 @@ export const ListItem = ({ item, focused, setSelectedItem }) => {
       tabIndex="0"
       ref={listItemRef}
       onKeyPress={(e) => handleItemSelect(e, item)}
-      onClick={() => setSelectedItem(item)}
+      onClick={() => handleClick(item)}
     >
       <p>{item}</p>
     </li>
@@ -38,4 +48,5 @@ ListItem.propTypes = {
   item: PropTypes.string,
   focused: PropTypes.bool,
   setSelectedItem: PropTypes.func,
+  createResultsList: PropTypes.func,
 };
