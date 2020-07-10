@@ -18,11 +18,11 @@ export const ListItem = ({
     }
   }, [focused]);
 
-  const handleItemSelect = (e, selectedValue) => {
+  const handleItemSelection = (e, selectedValue) => {
     if (e.key === "Enter") {
       setSelectedItem(selectedValue);
+      createResultsList(selectedValue);
     }
-    createResultsList(selectedValue);
   };
 
   const handleClick = (item) => {
@@ -36,7 +36,7 @@ export const ListItem = ({
       id={"list-item"}
       tabIndex="0"
       ref={listItemRef}
-      onKeyPress={(e) => handleItemSelect(e, item)}
+      onKeyDown={(e) => handleItemSelection(e, item)}
       onClick={() => handleClick(item)}
     >
       <p>{item}</p>

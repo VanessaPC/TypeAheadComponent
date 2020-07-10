@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { colorsList } from "../../mock/list";
 import { ListItem } from "./createList";
-import { filterList, stringStartsWithSpace } from "./helpers";
+import { filterList, stringStartsWithSpace, inputIsFilled } from "./helpers";
 
 // ** The list should be case sensitive
 // ** it should return only those values that start with the characters they entered
@@ -17,25 +17,29 @@ import { filterList, stringStartsWithSpace } from "./helpers";
 // ** : focus back into the input when i reached the top
 
 // ** use props
+// **: fix all key codes to be supported by all browsers
+// **: fix escape to close list and empty input field
+//
 // todo: style on bold the matching characters
 // todo: add a background on hover // focus
 // todo: clicking outside the list should close the list
 
 // BUGS:
-// todo: initially when I enter a non-capital letter sometimes the list blinks
+// **: initially when I enter a non-capital letter sometimes the list blinks
 // todo: if I move away from list focusIndex should reset
 // todo: keycode was deprecated and code doesn't work on IE11
+// **: when you enter special characters it blinks the list, it also does it once after you
+// you have entered a search
 
 // improvements:
-// todo: we should have a clear list button
+// **: we should have a clear list button
 // todo: code clean up
-
-const inputIsFilled = (value) => value.length !== 0;
+// todo: add arrow up, down, left, right?
 
 export const TypeAhead = () => {
   const [filterColor, setFilterColor] = useState("");
   const [char, setChar] = useState("");
-  const [displayList, setDisplayList] = useState(colorsList);
+  const [displayList, setDisplayList] = useState(null);
   const [time, setTime] = useState(null);
 
   const [focusIndex, setFocusIndex] = useState(null);
@@ -47,6 +51,7 @@ export const TypeAhead = () => {
   const handleInstantChange = (e) => {
     e.stopPropagation();
     let searchValue = e.target.value;
+
     setFilterColor(searchValue);
     stringCheck(searchValue);
   };
@@ -58,6 +63,7 @@ export const TypeAhead = () => {
         setDisplayList(filterList(value, colorsList));
       }, 200)
     );
+    setFocusIndex(null);
   };
 
   const stringCheck = (searchTerm) => {
@@ -68,9 +74,11 @@ export const TypeAhead = () => {
       const value = searchTerm.trimStart();
       setChar(value);
       createResultsList(value);
-    } else if (!stringStartsWithSpace(searchTerm)) {
+    } else if (!stringStartsWithSpace(searchTerm) && searchTerm.match(regex)) {
       setChar(searchTerm);
       createResultsList(searchTerm);
+    } else {
+      setDisplayList(null);
     }
   };
 
@@ -98,17 +106,30 @@ export const TypeAhead = () => {
     }
   };
 
+  // I want to clear the list
+  // clear the input field
+  const clearList = () => {
+    setChar(""); // this clears the input
+    setFilterColor(""); // this clears the filter
+    setFocusIndex(null);
+    setDisplayList(null);
+  };
+
   const getKey = (e) => {
-    if (e.keyCode === 9 && e.shiftKey) {
-      if (!inputIsFilled(char)) return;
+    if (!inputIsFilled(char)) return;
+
+    if (e.shiftKey && e.key === "Tab") {
       e.preventDefault();
       moveUp();
     } else if (e.keyCode === 9) {
-      if (!inputIsFilled(char)) return;
       e.preventDefault();
       moveDown();
+    } else if (e.key === "Escape") {
+      clearList();
     }
   };
+
+  console.log("colors lis", displayList);
 
   return (
     <>
@@ -123,6 +144,7 @@ export const TypeAhead = () => {
           value={filterColor}
           ref={inputRef}
         />
+        <button onClick={clearList}>Clear list</button>
         <ul>
           {inputIsFilled(char) &&
             displayList &&
