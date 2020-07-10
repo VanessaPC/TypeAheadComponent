@@ -1,11 +1,14 @@
 import React, { useRef, useLayoutEffect } from "react";
 import PropTypes from "prop-types";
+import { BoldPart } from "./styles";
+import { getBoldChars, getRightChars } from "./helpers";
 
 export const ListItem = ({
   item,
   focused,
   setSelectedItem,
   createResultsList,
+  selectedChars,
 }) => {
   // ** I keep a reference to the item here
   // ** so I have access to it to set the focus in the item
@@ -33,13 +36,17 @@ export const ListItem = ({
   return (
     <li
       key={`${item.length}${item}`}
-      id={"list-item"}
       tabIndex="0"
       ref={listItemRef}
       onKeyDown={(e) => handleItemSelection(e, item)}
       onClick={() => handleClick(item)}
     >
-      <p>{item}</p>
+      <BoldPart
+        dangerouslySetInnerHTML={{ __html: getBoldChars(item, selectedChars) }}
+      />
+      <span
+        dangerouslySetInnerHTML={{ __html: getRightChars(item, selectedChars) }}
+      />
     </li>
   );
 };
@@ -49,4 +56,5 @@ ListItem.propTypes = {
   focused: PropTypes.bool,
   setSelectedItem: PropTypes.func,
   createResultsList: PropTypes.func,
+  selectedChars: PropTypes.string,
 };

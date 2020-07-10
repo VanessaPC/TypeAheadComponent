@@ -1,40 +1,20 @@
 import React, { useState, useRef } from "react";
 import { colorsList } from "../../mock/list";
-import { ListItem } from "./createList";
+import { ListItem } from "./itemList";
 import { filterList, stringStartsWithSpace, inputIsFilled } from "./helpers";
 
-// ** The list should be case sensitive
-// ** it should return only those values that start with the characters they entered
-// ** empty space is considered empty (I should remove it)
-// **: clicking on a list item it should populate the input
-// **: populating the input should re-triger a re render of the list
-// **: input and list should be keyboard navigable
-// **: read keypreses from user
-// **: learn where the key is entering and set it as index
-// **: read tab, tab moves forward or away from the input if no list items
-// **: shift tab should move backwards or to the input
-// **: focus away from the input when no list
-// ** : focus back into the input when i reached the top
-
-// ** use props
-// **: fix all key codes to be supported by all browsers
-// **: fix escape to close list and empty input field
-//
-// todo: style on bold the matching characters
 // todo: add a background on hover // focus
 // todo: clicking outside the list should close the list
+// todo: on clicking or entering selection of item, we should clear the list
+// todo: cleaning the input should clear the list
 
 // BUGS:
-// **: initially when I enter a non-capital letter sometimes the list blinks
-// todo: if I move away from list focusIndex should reset
-// todo: keycode was deprecated and code doesn't work on IE11
-// **: when you enter special characters it blinks the list, it also does it once after you
-// you have entered a search
 
 // improvements:
-// **: we should have a clear list button
 // todo: code clean up
 // todo: add arrow up, down, left, right?
+// todo: maybe adding error boundary
+// todo: try find better solution for UI on bold strings
 
 export const TypeAhead = () => {
   const [filterColor, setFilterColor] = useState("");
@@ -121,15 +101,13 @@ export const TypeAhead = () => {
     if (e.shiftKey && e.key === "Tab") {
       e.preventDefault();
       moveUp();
-    } else if (e.keyCode === 9) {
+    } else if (e.key === "Tab") {
       e.preventDefault();
       moveDown();
     } else if (e.key === "Escape") {
       clearList();
     }
   };
-
-  console.log("colors lis", displayList);
 
   return (
     <>
@@ -154,6 +132,7 @@ export const TypeAhead = () => {
                 focused={index === focusIndex}
                 setSelectedItem={setFilterColor}
                 createResultsList={createResultsList}
+                selectedChars={char}
               />
             ))}
         </ul>

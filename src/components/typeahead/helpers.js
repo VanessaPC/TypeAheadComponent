@@ -8,4 +8,5 @@ export const filterList = (filterTerm, list) =>
   });
 
 export const stringStartsWithSpace = (value) => value.startsWith(" ");
+
 export const inputIsFilled = (value) => value.length !== 0;
