@@ -41,6 +41,7 @@ export const ListItem = ({
       onKeyDown={(e) => handleItemSelection(e, item)}
       onClick={() => handleClick(item)}
       key={index}
+      data-cy="search-result-item"
     >
       <BoldPart
         dangerouslySetInnerHTML={{ __html: getBoldChars(item, selectedChars) }}

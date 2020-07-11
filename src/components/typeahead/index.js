@@ -121,9 +121,10 @@ export const TypeAhead = () => {
   };
 
   return (
-    <Container>
+    <Container data-cy="search-container">
       <div onKeyDown={(e) => getKey(e)}>
         <Input
+          data-cy="search-input"
           id="input-filter"
           type="text"
           name="filter"
@@ -140,6 +141,7 @@ export const TypeAhead = () => {
             displayList &&
             displayList.map((item, index) => (
               <ListItem
+                data-cy="search-results"
                 index={index}
                 item={item}
                 focused={index === focusIndex}
