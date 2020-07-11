@@ -2,21 +2,21 @@ import React, { useState, useRef } from "react";
 import { colorsList } from "../../mock/list";
 import { ListItem } from "./itemList";
 import { filterList, stringStartsWithSpace, inputIsFilled } from "./helpers";
-import { Container, Input, Button, ListContainer } from "./styles";
+import {
+  Container,
+  Input,
+  Button,
+  ListContainer,
+  InputContainer,
+} from "./styles";
 
 // todo: clicking outside the list should close the list
-// todo: on clicking or entering selection of item, we should clear the list
+// **: on clicking or entering selection of item, we should clear the list
 // todo: cleaning the input should clear the list
-
-// todo: add styles
-// todo: add responsive design
-// todo: add animations
 // todo: add meaningful comments
 
 // improvements:
 // todo: code clean up
-// **: add arrow up, down, left, right?
-// **: add tests
 
 export const TypeAhead = () => {
   const [filterColor, setFilterColor] = useState("");
@@ -129,24 +129,29 @@ export const TypeAhead = () => {
   return (
     <Container data-cy="search-container">
       <div onKeyDown={(e) => getKey(e)}>
-        <Input
-          data-cy="search-input"
-          id="input-filter"
-          type="text"
-          name="filter"
-          placeholder="what color are you looking for?"
-          onChange={(e) => handleInstantChange(e)}
-          value={filterColor}
-          ref={inputRef}
-          autoComplete="off"
-        />
-        <Button
-          onClick={clearList}
-          onKeyDown={onClearListKeyDown}
-          ref={clearButtonRef}
-        >
-          Clear list
-        </Button>
+        <InputContainer>
+          <Input
+            data-cy="search-input"
+            id="input-filter"
+            type="text"
+            name="filter"
+            placeholder="Start your search"
+            onChange={(e) => handleInstantChange(e)}
+            value={filterColor}
+            ref={inputRef}
+            autoComplete="off"
+            filled={inputIsFilled(char)}
+          />
+          {inputIsFilled(char) && (
+            <Button
+              onClick={clearList}
+              onKeyDown={onClearListKeyDown}
+              ref={clearButtonRef}
+            >
+              X
+            </Button>
+          )}
+        </InputContainer>
         <ListContainer>
           {inputIsFilled(char) &&
             displayList &&
@@ -157,7 +162,7 @@ export const TypeAhead = () => {
                 item={item}
                 focused={index === focusIndex}
                 setSelectedItem={setFilterColor}
-                createResultsList={createResultsList}
+                clearListItems={setDisplayList}
                 selectedChars={char}
               />
             ))}

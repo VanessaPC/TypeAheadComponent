@@ -7,7 +7,7 @@ export const ListItem = ({
   item,
   focused,
   setSelectedItem,
-  createResultsList,
+  clearListItems,
   selectedChars,
   index,
 }) => {
@@ -25,13 +25,13 @@ export const ListItem = ({
   const handleItemSelection = (e, selectedValue) => {
     if (e.key === "Enter") {
       setSelectedItem(selectedValue);
-      createResultsList(selectedValue);
+      clearListItems(null);
     }
   };
 
   const handleClick = (item) => {
     setSelectedItem(item);
-    createResultsList(item);
+    clearListItems(null);
   };
 
   return (
@@ -57,7 +57,7 @@ ListItem.propTypes = {
   item: PropTypes.string,
   focused: PropTypes.bool,
   setSelectedItem: PropTypes.func,
-  createResultsList: PropTypes.func,
+  clearListItems: PropTypes.func,
   selectedChars: PropTypes.string,
   index: PropTypes.number,
 };
