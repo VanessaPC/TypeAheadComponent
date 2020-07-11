@@ -2,19 +2,18 @@ import React, { useState, useRef } from "react";
 import { colorsList } from "../../mock/list";
 import { ListItem } from "./itemList";
 import { filterList, stringStartsWithSpace, inputIsFilled } from "./helpers";
+import { Container, Input, Button, ListContainer } from "./styles";
 
-// todo: add a background on hover // focus
 // todo: clicking outside the list should close the list
 // todo: on clicking or entering selection of item, we should clear the list
 // todo: cleaning the input should clear the list
 
-// BUGS:
-
 // improvements:
 // todo: code clean up
-// todo: add arrow up, down, left, right?
+// **: add arrow up, down, left, right?
 // todo: maybe adding error boundary
 // todo: try find better solution for UI on bold strings
+// todo: make the styles look pretty
 
 export const TypeAhead = () => {
   const [filterColor, setFilterColor] = useState("");
@@ -27,6 +26,7 @@ export const TypeAhead = () => {
   // ** I want to control the navigation of the user towards the input field
   // ** so same as with the List items, I keep a check to the input field ref here.
   const inputRef = useRef();
+  const clearButtonRef = useRef();
 
   const handleInstantChange = (e) => {
     e.stopPropagation();
@@ -86,11 +86,13 @@ export const TypeAhead = () => {
     }
   };
 
-  // I want to clear the list
-  // clear the input field
+  const moveRight = () => clearButtonRef.current.focus();
+
+  const moveLeft = () => inputRef.current.focus();
+
   const clearList = () => {
-    setChar(""); // this clears the input
-    setFilterColor(""); // this clears the filter
+    setChar("");
+    setFilterColor("");
     setFocusIndex(null);
     setDisplayList(null);
   };
@@ -98,22 +100,30 @@ export const TypeAhead = () => {
   const getKey = (e) => {
     if (!inputIsFilled(char)) return;
 
-    if (e.shiftKey && e.key === "Tab") {
+    if ((e.shiftKey && e.key === "Tab") || e.key === "ArrowUp") {
       e.preventDefault();
       moveUp();
-    } else if (e.key === "Tab") {
+    } else if (e.key === "Tab" || e.key === "ArrowDown") {
       e.preventDefault();
       moveDown();
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      moveRight();
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      console.log("getting here", char, displayList);
+      setFilterColor(char);
+      setDisplayList(displayList);
+      moveLeft();
     } else if (e.key === "Escape") {
       clearList();
     }
   };
 
   return (
-    <>
-      <p>Search Colors</p>
+    <Container>
       <div onKeyDown={(e) => getKey(e)}>
-        <input
+        <Input
           id="input-filter"
           type="text"
           name="filter"
@@ -122,12 +132,15 @@ export const TypeAhead = () => {
           value={filterColor}
           ref={inputRef}
         />
-        <button onClick={clearList}>Clear list</button>
-        <ul>
+        <Button onClick={clearList} onKeyDown={clearList} ref={clearButtonRef}>
+          Clear list
+        </Button>
+        <ListContainer>
           {inputIsFilled(char) &&
             displayList &&
             displayList.map((item, index) => (
               <ListItem
+                index={index}
                 item={item}
                 focused={index === focusIndex}
                 setSelectedItem={setFilterColor}
@@ -135,8 +148,8 @@ export const TypeAhead = () => {
                 selectedChars={char}
               />
             ))}
-        </ul>
+        </ListContainer>
       </div>
-    </>
+    </Container>
   );
 };
