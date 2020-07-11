@@ -8,12 +8,15 @@ import { Container, Input, Button, ListContainer } from "./styles";
 // todo: on clicking or entering selection of item, we should clear the list
 // todo: cleaning the input should clear the list
 
+// todo: add styles
+// todo: add responsive design
+// todo: add animations
+// todo: add meaningful comments
+
 // improvements:
 // todo: code clean up
 // **: add arrow up, down, left, right?
-// todo: maybe adding error boundary
-// todo: try find better solution for UI on bold strings
-// todo: make the styles look pretty
+// **: add tests
 
 export const TypeAhead = () => {
   const [filterColor, setFilterColor] = useState("");
@@ -111,11 +114,14 @@ export const TypeAhead = () => {
       moveRight();
     } else if (e.key === "ArrowLeft") {
       e.preventDefault();
-      console.log("getting here", char, displayList);
-      setFilterColor(char);
-      setDisplayList(displayList);
       moveLeft();
     } else if (e.key === "Escape") {
+      clearList();
+    }
+  };
+
+  const onClearListKeyDown = (e) => {
+    if (e.key === "Enter") {
       clearList();
     }
   };
@@ -132,8 +138,13 @@ export const TypeAhead = () => {
           onChange={(e) => handleInstantChange(e)}
           value={filterColor}
           ref={inputRef}
+          autoComplete="off"
         />
-        <Button onClick={clearList} onKeyDown={clearList} ref={clearButtonRef}>
+        <Button
+          onClick={clearList}
+          onKeyDown={onClearListKeyDown}
+          ref={clearButtonRef}
+        >
           Clear list
         </Button>
         <ListContainer>

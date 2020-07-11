@@ -1,11 +1,6 @@
 // import cy from "cypress";
 /// <reference types="cypress" />
 
-// **: to test if the search is visible in localhost
-// maybe set up a config with local urls
-// todo: test that list does not appear when user enters lower case or spaces
-// todo: test list does not appear when user enters special char
-// todo: test bold chars do appear when user enters chars
 // todo: test for special clicks on user interface, tab and shiftkey tab .
 
 context("TypeAhead component", () => {
