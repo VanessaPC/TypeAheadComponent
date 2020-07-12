@@ -5,6 +5,10 @@ export const BaseCSS = createGlobalStyle`
     *, *::before, *::after {
         box-sizing: border-box;
     }
-    
+
+    body{
+        background: AliceBlue;
+    }
     ${typography}
+
 `;

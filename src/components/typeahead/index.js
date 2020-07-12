@@ -17,9 +17,7 @@ export const TypeAhead = ({ list }) => {
   const [filterColor, setFilterColor] = useState("");
   const [char, setChar] = useState("");
   const [displayList, setDisplayList] = useState(null);
-  const [listOpen, setListOpen] = useState(
-    displayList && displayList.length > 0
-  );
+  const [listOpen, setListOpen] = useState(displayList !== null);
   const [focusIndex, setFocusIndex] = useState(null);
 
   // ** I want to control the navigation of the user towards the input field
@@ -30,8 +28,10 @@ export const TypeAhead = ({ list }) => {
 
   const handleInstantChange = (e) => {
     e.stopPropagation();
-    setFilterColor(e.target.value);
-    setListOpen(true);
+    const userInput = e.target.value;
+
+    setFilterColor(userInput);
+    setListOpen(userInput.length > 0);
   };
 
   const createResultsList = useCallback(
@@ -181,7 +181,7 @@ export const TypeAhead = ({ list }) => {
           autoComplete="off"
           onClick={() => {
             char && char.length && createResultsList(char);
-            setListOpen(true);
+            setListOpen(displayList !== null);
           }}
         />
         {inputIsFilled(char) && (

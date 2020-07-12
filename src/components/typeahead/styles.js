@@ -76,4 +76,7 @@ export const ListContainer = styled.ul`
 
   overflow: auto;
   height: 400px;
+
+  background: ${WHITE};
+  border-radius: 10px;
 `;
