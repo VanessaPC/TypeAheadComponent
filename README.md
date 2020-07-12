@@ -1,4 +1,14 @@
-# Project Instructions
+# Submitting instructions:
+
+In order to run and use the project you will need Node, and npm in your computer.
+Then follow the instructions:
+
+- Clone the Repo
+- CD into the repo and run `npm install`
+- Run `npm start` and you will see the app in `http://localhost:3000`
+- In order to run the E2E test: `npm cypress:run`
+
+# Project Instructions / Requirements
 
 - This app is currently in a broken state. You must create your component and add it to `ReactDOM.render` in `src/index.js` to get started.
 - Using React and CSS, create a `Typeahead` component that takes a `list` prop.
