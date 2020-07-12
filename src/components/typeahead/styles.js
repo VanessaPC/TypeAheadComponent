@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { WHITE_D, GREY_2, BLUE, WHITE, CYAN_BLUE } from "../../styles/colors";
 import { PHONE, TABLET } from "../../styles/queries";
-import { Outline, NewOutline } from "../../styles/globals";
+import { NewOutline } from "../../styles/globals";
 
 export const Container = styled.div`
   display: flex;
@@ -50,7 +50,7 @@ export const Input = styled.input`
 export const Button = styled.button`
   border-radius: 30px;
   padding: 0.9rem 1rem;
-  border: white;
+  border: 2px solid ${WHITE};
   position: absolute;
   top: 6px;
   right: 11px;
