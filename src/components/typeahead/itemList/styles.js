@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { GREY_2, LIGHT_MINT, MINT, WHITE_MINT } from "../../../styles/colors";
+import { BLUE, BABY_BLUE, CYAN_BLUE } from "../../../styles/colors";
 import { bounceIn } from "../../../styles/globals";
 
 export const BoldPart = styled.span`
@@ -7,22 +7,24 @@ export const BoldPart = styled.span`
 `;
 
 export const Item = styled.li`
-  font-size: 1rem;
-  font-family: Arial, sans-serif;
-  padding: 1rem 0.3rem;
+  font-size: 1.2rem;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  padding: 1rem 0.5rem;
+  opacity: 0;
 
   &:focus {
-    background: ${WHITE_MINT};
-
-    outline: 1px solid ${MINT};
-    border-radius: 0;
-    color: ${GREY_2};
+    outline: none;
+    border: 2px solid ${BLUE};
+    background: ${BABY_BLUE};
   }
 
   &:hover {
-    background: ${LIGHT_MINT};
-    outline: 1px solid ${MINT};
+    background: ${CYAN_BLUE};
+    transition: background 0.2s ease-in-out;
   }
 
   animation: ${bounceIn} 0.2s;
+  ${({ index }) => index && `animation-delay: .${index}s`};
+  animation-fill-mode: forwards;
 `;

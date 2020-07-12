@@ -6,10 +6,9 @@ import { getBoldChars, getRightChars } from "./helpers";
 export const ListItem = ({
   item,
   focused,
-  setSelectedItem,
-  clearListItems,
   selectedChars,
   index,
+  onItemSelect,
 }) => {
   // ** I keep a reference to the item here
   // ** so I have access to it to set the focus in the item
@@ -24,14 +23,8 @@ export const ListItem = ({
 
   const handleItemSelection = (e, selectedValue) => {
     if (e.key === "Enter") {
-      setSelectedItem(selectedValue);
-      clearListItems(null);
+      onItemSelect(selectedValue);
     }
-  };
-
-  const handleClick = (item) => {
-    setSelectedItem(item);
-    clearListItems(null);
   };
 
   return (
@@ -39,9 +32,10 @@ export const ListItem = ({
       tabIndex="0"
       ref={listItemRef}
       onKeyDown={(e) => handleItemSelection(e, item)}
-      onClick={() => handleClick(item)}
+      onClick={() => onItemSelect(item)}
       key={index}
       data-cy="search-result-item"
+      index={index}
     >
       <BoldPart
         dangerouslySetInnerHTML={{ __html: getBoldChars(item, selectedChars) }}
@@ -56,8 +50,8 @@ export const ListItem = ({
 ListItem.propTypes = {
   item: PropTypes.string,
   focused: PropTypes.bool,
-  setSelectedItem: PropTypes.func,
-  clearListItems: PropTypes.func,
+  onItemSelect: PropTypes.func,
+  closeList: PropTypes.func,
   selectedChars: PropTypes.string,
   index: PropTypes.number,
 };

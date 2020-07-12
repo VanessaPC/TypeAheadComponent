@@ -7,6 +7,6 @@ export const filterList = (filterTerm, list) =>
     }
   });
 
-export const stringStartsWithSpace = (value) => value.startsWith(" ");
+export const setFocus = (value) => value.current.focus();
 
 export const inputIsFilled = (value) => value.length !== 0;

@@ -1,19 +1,21 @@
 import { css, keyframes } from "styled-components";
-import { MINT, LIGHT_MINT } from "./colors";
+import { BLUE, BABY_BLUE } from "./colors";
 
-export const Outline = css`
-  border: 2px solid ${MINT};
-  box-shadow: 0px 0px 3px 4px ${LIGHT_MINT};
+export const NewOutline = css`
+  border: 2px solid ${BLUE};
+  box-shadow: 0px 0px 2px 3px ${BABY_BLUE};
 `;
 
 export const bounceIn = keyframes`{
-    from {
+    0% {
         opacity: 0;
-        transform: translate3d(0, -100%, 0);
+        transform: scale3d(0.3, 0.3, 0.3);
       }
     
-      to {
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
+      50% {
+        opacity: 0;
+      }
+      100%{
+          opacity: 1;
       }
   }`;

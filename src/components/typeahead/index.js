@@ -1,7 +1,9 @@
-import React, { useState, useRef } from "react";
-import { colorsList } from "../../mock/list";
+import React, { useCallback, useEffect, useState, useRef } from "react";
+import PropTypes from "prop-types";
 import { ListItem } from "./itemList";
-import { filterList, stringStartsWithSpace, inputIsFilled } from "./helpers";
+import { filterList, inputIsFilled, setFocus } from "./helpers";
+import { USER_INPUT } from "./constants";
+import { MdClose } from "react-icons/md";
 import {
   Container,
   Input,
@@ -9,61 +11,61 @@ import {
   ListContainer,
   InputContainer,
 } from "./styles";
+import { WHITE } from "../../styles/colors";
 
-// todo: clicking outside the list should close the list
-// **: on clicking or entering selection of item, we should clear the list
-// todo: cleaning the input should clear the list
-// todo: add meaningful comments
-
-// improvements:
-// todo: code clean up
-
-export const TypeAhead = () => {
+export const TypeAhead = ({ list }) => {
   const [filterColor, setFilterColor] = useState("");
   const [char, setChar] = useState("");
   const [displayList, setDisplayList] = useState(null);
-  const [time, setTime] = useState(null);
-
+  const [listOpen, setListOpen] = useState(
+    displayList && displayList.length > 0
+  );
   const [focusIndex, setFocusIndex] = useState(null);
 
   // ** I want to control the navigation of the user towards the input field
   // ** so same as with the List items, I keep a check to the input field ref here.
   const inputRef = useRef();
   const clearButtonRef = useRef();
+  const containerRef = useRef();
 
   const handleInstantChange = (e) => {
     e.stopPropagation();
-    let searchValue = e.target.value;
-
-    setFilterColor(searchValue);
-    stringCheck(searchValue);
+    setFilterColor(e.target.value);
+    setListOpen(true);
   };
 
-  const createResultsList = (value) => {
-    if (time) clearTimeout(time);
-    setTime(
-      setTimeout(() => {
-        setDisplayList(filterList(value, colorsList));
-      }, 200)
-    );
-    setFocusIndex(null);
-  };
+  const createResultsList = useCallback(
+    (value) => {
+      setDisplayList(filterList(value, list));
+      setFocusIndex(null);
+    },
+    [list]
+  );
 
-  const stringCheck = (searchTerm) => {
-    // ** It's a small regex to check for any A to Z value in a given string.
-    const regex = /[a-zA-Z]+/g;
-
-    if (stringStartsWithSpace(searchTerm) && searchTerm.match(regex)) {
+  const stringCheck = useCallback(
+    (searchTerm) => {
+      const regex = /[a-zA-Z]+/g;
       const value = searchTerm.trimStart();
-      setChar(value);
-      createResultsList(value);
-    } else if (!stringStartsWithSpace(searchTerm) && searchTerm.match(regex)) {
-      setChar(searchTerm);
-      createResultsList(searchTerm);
-    } else {
-      setDisplayList(null);
-    }
-  };
+
+      if (searchTerm.match(regex)) {
+        setChar(value);
+        createResultsList(value);
+      } else {
+        setDisplayList(null);
+      }
+
+      if (!searchTerm.length) {
+        setChar("");
+      }
+    },
+    [createResultsList]
+  );
+
+  useEffect(() => {
+    const timer = setTimeout(() => stringCheck(filterColor), 200);
+
+    return () => clearTimeout(timer);
+  }, [filterColor, stringCheck, setChar]);
 
   const moveDown = () =>
     focusIndex === null
@@ -89,9 +91,51 @@ export const TypeAhead = () => {
     }
   };
 
-  const moveRight = () => clearButtonRef.current.focus();
+  const getKeyAction = (e) => {
+    if (!inputIsFilled(char)) return;
 
-  const moveLeft = () => inputRef.current.focus();
+    if (
+      (e.shiftKey && e.key === USER_INPUT.TAB) ||
+      e.key === USER_INPUT.ARROW_UP
+    ) {
+      e.preventDefault();
+      moveUp();
+      return;
+    }
+
+    switch (e.key) {
+      case USER_INPUT.TAB:
+        e.preventDefault();
+        moveDown();
+        break;
+
+      case USER_INPUT.ARROW_DOWN:
+        e.preventDefault();
+        moveDown();
+        break;
+
+      case USER_INPUT.ARROW_RIGHT:
+        e.preventDefault();
+        setFocus(clearButtonRef);
+        break;
+
+      case USER_INPUT.ARROW_LEFT:
+        e.preventDefault();
+        setFocus(inputRef);
+        break;
+
+      case USER_INPUT.ESCAPE:
+        setListOpen(false);
+        break;
+
+      case USER_INPUT.ENTER:
+        clearList();
+        break;
+
+      default:
+        return null;
+    }
+  };
 
   const clearList = () => {
     setChar("");
@@ -100,74 +144,76 @@ export const TypeAhead = () => {
     setDisplayList(null);
   };
 
-  const getKey = (e) => {
-    if (!inputIsFilled(char)) return;
-
-    if ((e.shiftKey && e.key === "Tab") || e.key === "ArrowUp") {
-      e.preventDefault();
-      moveUp();
-    } else if (e.key === "Tab" || e.key === "ArrowDown") {
-      e.preventDefault();
-      moveDown();
-    } else if (e.key === "ArrowRight") {
-      e.preventDefault();
-      moveRight();
-    } else if (e.key === "ArrowLeft") {
-      e.preventDefault();
-      moveLeft();
-    } else if (e.key === "Escape") {
-      clearList();
-    }
+  const onItemSelect = (value) => {
+    setFocus(inputRef);
+    setFilterColor(value);
+    setListOpen(false);
   };
 
-  const onClearListKeyDown = (e) => {
-    if (e.key === "Enter") {
-      clearList();
-    }
+  // In this case we set a timeout because the element body gets focused before the element
+  // and we only want to check after the actual focused element is active.
+  // This check happens because we care about other elements state of focus and unfocused.
+  const handleBlur = (e) => {
+    setTimeout(() => {
+      if (!containerRef.current.contains(document.activeElement)) {
+        setListOpen(false);
+      }
+    });
   };
 
   return (
-    <Container data-cy="search-container">
-      <div onKeyDown={(e) => getKey(e)}>
-        <InputContainer>
-          <Input
-            data-cy="search-input"
-            id="input-filter"
-            type="text"
-            name="filter"
-            placeholder="Start your search"
-            onChange={(e) => handleInstantChange(e)}
-            value={filterColor}
-            ref={inputRef}
-            autoComplete="off"
-            filled={inputIsFilled(char)}
-          />
-          {inputIsFilled(char) && (
-            <Button
-              onClick={clearList}
-              onKeyDown={onClearListKeyDown}
-              ref={clearButtonRef}
-            >
-              X
-            </Button>
-          )}
-        </InputContainer>
+    <Container
+      data-cy="search-container"
+      onKeyDown={(e) => getKeyAction(e)}
+      ref={containerRef}
+      onBlur={handleBlur}
+    >
+      <InputContainer>
+        <Input
+          data-cy="search-input"
+          id="input-filter"
+          type="text"
+          name="filter"
+          placeholder="Start your search"
+          onChange={(e) => handleInstantChange(e)}
+          value={filterColor}
+          ref={inputRef}
+          autoComplete="off"
+          onClick={() => {
+            char && char.length && createResultsList(char);
+            setListOpen(true);
+          }}
+        />
+        {inputIsFilled(char) && (
+          <Button
+            onClick={clearList}
+            onKeyDown={(e) => getKeyAction(e)}
+            ref={clearButtonRef}
+          >
+            <MdClose fontSize="1.4rem" fill={WHITE} />
+          </Button>
+        )}
+      </InputContainer>
+      {listOpen && (
         <ListContainer>
-          {inputIsFilled(char) &&
-            displayList &&
+          {displayList &&
             displayList.map((item, index) => (
               <ListItem
                 data-cy="search-results"
                 index={index}
                 item={item}
+                key={item}
                 focused={index === focusIndex}
-                setSelectedItem={setFilterColor}
-                clearListItems={setDisplayList}
+                onItemSelect={onItemSelect}
                 selectedChars={char}
               />
             ))}
         </ListContainer>
-      </div>
+      )}
     </Container>
   );
+};
+
+TypeAhead.propTypes = {
+  list: PropTypes.array,
 };

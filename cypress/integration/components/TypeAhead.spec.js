@@ -1,8 +1,6 @@
 // import cy from "cypress";
 /// <reference types="cypress" />
 
-// todo: test for special clicks on user interface, tab and shiftkey tab .
-
 context("TypeAhead component", () => {
   beforeEach(() => {
     cy.visit("http://localhost:3000");

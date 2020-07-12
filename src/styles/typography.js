@@ -1,5 +1,6 @@
 import { css } from "styled-components";
 import { GREY_2 } from "./colors";
+
 const PRIMARY_FONT = "Arial, sans-serif";
 
 export const typography = css`

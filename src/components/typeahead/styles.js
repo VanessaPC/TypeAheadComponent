@@ -1,22 +1,15 @@
 import styled from "styled-components";
-import { WHITE_D, GREY_2, LIGHT_MINT, WHITE } from "../../styles/colors";
+import { WHITE_D, GREY_2, BLUE, WHITE, CYAN_BLUE } from "../../styles/colors";
 import { PHONE, TABLET } from "../../styles/queries";
-import { Outline } from "../../styles/globals";
+import { Outline, NewOutline } from "../../styles/globals";
 
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   position: relative;
   top: 3rem;
-`;
 
-export const InputContainer = styled.div`
-  position: relative;
-`;
-
-export const Input = styled.input`
-  font-size: 2rem;
   ${PHONE} {
     width: 17rem;
   }
@@ -25,8 +18,17 @@ export const Input = styled.input`
   }
 
   width: 45rem;
-  padding: 0.8rem 1rem;
+  margin: 0 auto;
+`;
 
+export const InputContainer = styled.div`
+  position: relative;
+`;
+
+export const Input = styled.input`
+  font-size: 2rem;
+  padding: 0.8rem 1rem;
+  width: 100%;
   background: ${WHITE};
   border: 2px solid ${WHITE};
   border-radius: 10px;
@@ -37,28 +39,41 @@ export const Input = styled.input`
   }
 
   &:hover {
-    border: 2px solid ${LIGHT_MINT};
+    border: 2px solid ${BLUE};
   }
 
   &:focus {
-    ${Outline}
+    ${NewOutline}
   }
 `;
 
 export const Button = styled.button`
-  font-size: 1rem;
-  border-radius: 20px;
-  margin: 0.3px;
-  padding: 0.8rem 1rem;
+  border-radius: 30px;
+  padding: 0.9rem 1rem;
   border: white;
   position: absolute;
-  top: 10px;
+  top: 6px;
   right: 11px;
-  background: ${LIGHT_MINT};
-  color: ${WHITE};
+  background: ${CYAN_BLUE};
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:focus {
+    outline: none;
+    ${NewOutline}
+  }
 `;
 
 export const ListContainer = styled.ul`
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 60px;
   list-style-type: none;
   padding: 0;
+
+  overflow: auto;
+  height: 400px;
 `;
