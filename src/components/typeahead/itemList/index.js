@@ -21,9 +21,10 @@ export const ListItem = ({
     }
   }, [focused]);
 
-  const handleItemSelection = (e, selectedValue) => {
+  const handleItemSelection = (e, item) => {
     if (e.key === "Enter") {
-      onItemSelect(selectedValue);
+      e.stopPropagation();
+      onItemSelect(item);
     }
   };
 
