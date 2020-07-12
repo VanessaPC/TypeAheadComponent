@@ -6,7 +6,18 @@
   - Please do not change `colorsList` or its contents.
   - If you want to go above and beyond, you can add other features or use another list that you receive from an async query, as long as it still meets all the same requirements when the `colorsList` is passed as the `list` prop.
 
+## Submitting instructions:
+
+In order to run and use the project you will need Node, and npm in your computer.
+Then follow the instructions:
+
+- Clone the Repo
+- CD into the repo and run `npm install`
+- Run `npm start` and you will see the app in `http://localhost:3000`
+- In order to run the E2E test: `npm cypress:run`
+
 ## Submitting your Project
+
 - Send the link to a public repository with your project submission to your recruitment contact.
 
 #### Things we like to see
